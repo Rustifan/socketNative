@@ -1,0 +1,44 @@
+import * as React from "react";
+import MapView, {Marker} from "react-native-maps";
+import { StyleSheet, View, Dimensions } from "react-native";
+import { useSelector } from "react-redux";
+import { RootStore } from "../redux/store";
+
+export default function GoogleMap() {
+
+    const { userLocations } = useSelector(
+        (state: RootStore) => state
+      ).location;
+    const locations = Array.from(userLocations)
+   
+
+  return (
+    <View style={styles.container}>
+      <MapView
+         
+        style={styles.map}>
+
+        {locations.map(([user, location])=>(
+            <Marker
+                key={user} 
+                coordinate={{longitude: location.coords.longitude, latitude: location.coords.latitude}}/>
+        ))}
+        </MapView>
+      
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 50,
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  map: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+  },
+});
