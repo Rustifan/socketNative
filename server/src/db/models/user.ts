@@ -1,4 +1,6 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
+import { BeAnObject, IObjectWithTypegooseFunction } from "@typegoose/typegoose/lib/types";
+import { Document } from "mongoose";
 
 export class User{
     @prop({required: true})
@@ -18,4 +20,7 @@ export class User{
 
 export const UserModel = getModelForClass(User)
 
+export const findByEmail = async (email: string)=>{
+    return await UserModel.findOne({email: email})
+}
 

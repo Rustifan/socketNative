@@ -1,3 +1,3 @@
-import { UserRegistration } from "./UserRegistration";
+import { UserRegistration, UserMongooseType, UserLogin, UserResponseType } from "./user";
 
-export { UserRegistration } 
+export { UserRegistration, UserMongooseType, UserLogin, UserResponseType } 

@@ -6,10 +6,10 @@ export const catchAsync =
       req: Request,
       res: Response,
       next?: NextFunction
-    ) => Promise<void>
+    ) => any
   ) =>
   (req: Request, res: Response, next: NextFunction) => {
-    asyncFunction(req, res, next).catch((error) => {
+    asyncFunction(req, res, next).catch((error: any) => {
       next(error);
     });
   };
