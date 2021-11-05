@@ -10,6 +10,7 @@ import GeoLocation from "./components/GeoLocation";
 import GoogleMap from "./components/GoogleMap";
 import { Asset } from "expo-asset";
 import AppLoading from 'expo-app-loading';
+import Test from "./components/Test";
 
 const Stack = createNativeStackNavigator();
 

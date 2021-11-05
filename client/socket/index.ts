@@ -1,8 +1,9 @@
 import socketIOClient, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";
+import { SERVER_URL } from "../constants";
 import { setSocketRouter } from "./socketRouter";
 
-const ENDPOINT = "http://192.168.5.14:8080"; // change if dynamic ip for testing
+const ENDPOINT = SERVER_URL; // change if dynamic ip for testing
 
 let socket: null | Socket<DefaultEventsMap, DefaultEventsMap> = null;
 

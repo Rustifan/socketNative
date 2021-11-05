@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Dimensions,
@@ -34,7 +34,6 @@ import {
 } from "react-native-gesture-handler";
 
 import Svg, { Image, Circle, ClipPath } from "react-native-svg";
-
 type RootStackParamList = {
   Login: undefined;
   GeoLocation: undefined;
@@ -45,6 +44,9 @@ type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const { width, height } = Dimensions.get("window");
 const Login: React.FC<Props> = ({ navigation }) => {
+  
+  const [login, setLogin] = useState({email: "", password: ""});
+
   const buttonOpacity = new Value(1);
 
   const runTiming = (clock: Animated.Clock, value: any, dest: number) => {
@@ -141,7 +143,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
         ]),
     },
   ]);
-
+  
   return (
     <View
       style={{ flex: 1, backgroundColor: "white", justifyContent: "flex-end" }}
@@ -224,11 +226,15 @@ const Login: React.FC<Props> = ({ navigation }) => {
             placeholder="EMAIL"
             placeholderTextColor="black"
             style={styles.textInput}
+            onChange={event=>setLogin(login=>({...login, email: event.nativeEvent.text}))}
+            value={login.email}
           />
           <TextInput
             placeholder="PASSWORD"
             placeholderTextColor="black"
             style={styles.textInput}
+            onChange={event=>setLogin(login=>({...login, password: event.nativeEvent.text}))}
+            value={login.password}
           />
           <Animated.View style={styles.button}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>SIGN IN</Text>
@@ -260,7 +266,7 @@ const styles = StyleSheet.create({
     ...shadow,
   },
   textInput: {
-
+    backgroundColor: "white",
     height: 60,
     borderRadius: 25,
     borderWidth: 0.5,

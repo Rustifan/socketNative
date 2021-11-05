@@ -1,12 +1,12 @@
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { Button, View, Text, StyleSheet } from "react-native";
-import { socket } from "../socket";
+import { getSocket } from "../socket";
 
 
 const Test: React.FC = () => {
   const [date, setDate] = useState("");
-
+  const socket = getSocket();
   socket.on("ping", (response: { data: string }) => {
     const formatedDate = format(new Date(response.data), "hh:mm:ss");
     setDate(formatedDate);
