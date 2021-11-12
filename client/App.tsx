@@ -6,11 +6,9 @@ import { StyleSheet, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./components/Login";
-import GeoLocation from "./components/GeoLocation";
 import GoogleMap from "./components/GoogleMap";
 import { Asset } from "expo-asset";
 import AppLoading from 'expo-app-loading';
-import Test from "./components/Test";
 
 const Stack = createNativeStackNavigator();
 
@@ -56,8 +54,7 @@ export default class App extends React.Component {
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Login">
               <Stack.Screen options={{headerShown: false}} name="Login" component={Login} />
-              <Stack.Screen name="GeoLocation" component={GeoLocation} />
-              <Stack.Screen name="GoogleMap" component={GoogleMap} />
+              <Stack.Screen options={{headerShown: false}} name="GoogleMap" component={GoogleMap} />
             </Stack.Navigator>
           </NavigationContainer>
         </Provider>

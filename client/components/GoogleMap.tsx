@@ -3,6 +3,7 @@ import MapView, {Marker} from "react-native-maps";
 import { StyleSheet, View, Dimensions } from "react-native";
 import { useSelector } from "react-redux";
 import { RootStore } from "../redux/store";
+import GeoLocation from "./GeoLocation";
 
 export default function GoogleMap() {
 
@@ -13,19 +14,19 @@ export default function GoogleMap() {
    
 
   return (
+    <>
     <View style={styles.container}>
       <MapView
-         
-        style={styles.map}>
-
+         style={styles.map}>
         {locations.map(([user, location])=>(
-            <Marker
-                key={user} 
-                coordinate={{longitude: location.coords.longitude, latitude: location.coords.latitude}}/>
-        ))}
+          <Marker
+          key={user} 
+          coordinate={{longitude: location.coords.longitude, latitude: location.coords.latitude}}/>
+          ))}
         </MapView>
-      
+        <GeoLocation/>
     </View>
+    </>
   );
 }
 
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   map: {
+    zIndex: -1,
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
   },

@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Dimensions,
   StyleSheet,
   Text,
-  TextInput,
   Keyboard,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -16,15 +15,9 @@ import Animated, {
   eq,
   set,
   interpolateNode,
-  clockRunning,
-  startClock,
-  timing,
-  EasingNode,
-  stopClock,
-  debug,
   Clock,
   Extrapolate,
-  concat,
+  concat
 } from "react-native-reanimated";
 import {
   TapGestureHandler,
@@ -34,50 +27,24 @@ import {
 } from "react-native-gesture-handler";
 
 import Svg, { Image, Circle, ClipPath } from "react-native-svg";
-type RootStackParamList = {
-  Login: undefined;
-  GeoLocation: undefined;
-  GoogleMap: undefined;
-};
+import runTiming from "../reanimated/runTiming";
+import { FormRefFunctions } from "./form/Form";
+import LoginForm, { LoginFormObject } from "./form/LoginForm";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux/actions/userActions";
+import { RootStore } from "../redux/store";
+import { RootStackParamList } from "../types";
 
+const buttonOpacity = new Value(1);
+const { width, height } = Dimensions.get("window");
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
-const { width, height } = Dimensions.get("window");
 const Login: React.FC<Props> = ({ navigation }) => {
-  
-  const [login, setLogin] = useState({email: "", password: ""});
-
-  const buttonOpacity = new Value(1);
-
-  const runTiming = (clock: Animated.Clock, value: any, dest: number) => {
-    const state = {
-      finished: new Value(0),
-      position: new Value(0),
-      time: new Value(0),
-      frameTime: new Value(0),
-    };
-
-    const config = {
-      duration: 1000,
-      toValue: new Value(0),
-      easing: EasingNode.inOut(EasingNode.ease),
-    };
-
-    return block([
-      cond(clockRunning(clock), 0, [
-        set(state.finished, 0),
-        set(state.time, 0),
-        set(state.position, value),
-        set(state.frameTime, 0),
-        set(config.toValue, dest),
-        startClock(clock),
-      ]),
-      timing(clock, state, config),
-      cond(state.finished, debug("stop clock", stopClock(clock))),
-      state.position,
-    ]);
-  };
-
+  const { loading } = useSelector(
+    (state: RootStore) => state
+  ).user;
+  const loginRef = useRef<FormRefFunctions>(null);
+  const dispatch = useDispatch();
   const buttonY = interpolateNode(buttonOpacity, {
     inputRange: [0, 1],
     outputRange: [100, 0],
@@ -139,11 +106,15 @@ const Login: React.FC<Props> = ({ navigation }) => {
           cond(state, State.END),
           Animated.call([], () => {
             Keyboard.dismiss();
+            loginRef.current?.clearState();
           }),
         ]),
     },
   ]);
-  
+  const onHandleLogin = (loginObj: LoginFormObject)=>{
+    dispatch(login(loginObj, navigation))
+  }  
+    
   return (
     <View
       style={{ flex: 1, backgroundColor: "white", justifyContent: "flex-end" }}
@@ -222,23 +193,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
             </Animated.View>
           </TapGestureHandler>
 
-          <TextInput
-            placeholder="EMAIL"
-            placeholderTextColor="black"
-            style={styles.textInput}
-            onChange={event=>setLogin(login=>({...login, email: event.nativeEvent.text}))}
-            value={login.email}
-          />
-          <TextInput
-            placeholder="PASSWORD"
-            placeholderTextColor="black"
-            style={styles.textInput}
-            onChange={event=>setLogin(login=>({...login, password: event.nativeEvent.text}))}
-            value={login.password}
-          />
-          <Animated.View style={styles.button}>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>SIGN IN</Text>
-          </Animated.View>
+          <LoginForm loading={loading} ref={loginRef} onSubmit={onHandleLogin}/>
         </Animated.View>
       </View>
     </View>

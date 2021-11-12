@@ -1,5 +1,7 @@
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Dispatch } from "redux";
 import agent from "../../agent";
+import { RootStackParamList } from "../../types";
 import { LoginResponse, UserLogin, UserRegistration } from "../../types/user";
 import { SetLoading, SET_LOADING, UserDispatcherType } from "./userActionTypes";
 import { SetUser, SET_USER } from "./userActionTypes";
@@ -18,13 +20,14 @@ export const logout = (): SetUser => ({
     type: SET_USER,
     payload: null
 })
-
 export const login =
-  (userLogin: UserLogin) => async (dispatch: Dispatch<UserDispatcherType>) => {
+  (userLogin: UserLogin, navigation: NativeStackNavigationProp<RootStackParamList, "Login">) => async (dispatch: Dispatch<any>) => {
     dispatch(setUserLoading(true));
     try {
       const loginResponse = await agent.users.login(userLogin);
       dispatch(setUser(loginResponse));
+      
+      navigation.replace("GoogleMap");
     } catch (error) {
       console.log(error);
     } finally {
